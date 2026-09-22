@@ -4,7 +4,7 @@
 <p>{{ scan.target.url }} | {{ scan.config.scan_type }} | {{ scan.status }} | ${{ scan.cost_estimate }}</p>
 <table class="table table-striped">
 <tr><th>Severity</th><th>Finding</th><th>URL</th><th>Fix</th></tr>
-{% for f in scan.findings.all %}<tr><td>{{ f.severity }}</td><td>{{ f.name }}<br><small>{{ f.description }}</small></td><td>{{ f.url|truncatechars:50 }}</td><td>{{ f.solution }}</td></tr>{% endfor %}
+{% for f in findings %}<tr><td>{{ f.severity }}</td><td>{{ f.name }}<br><small>{{ f.description }}</small></td><td>{{ f.url|truncatechars:50 }}</td><td>{{ f.solution }}</td></tr>{% endfor %}
 </table>
 <a class="btn btn-secondary" href="/scans/{{ scan.pk }}/report.pdf">Download PDF</a>
 {% endblock %}

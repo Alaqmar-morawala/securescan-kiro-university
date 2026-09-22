@@ -9,6 +9,6 @@
 <h4>Findings ({{ scan.findings.count }})</h4>
 <table class="table table-striped">
 <tr><th>Severity</th><th>Finding</th><th>URL</th></tr>
-{% for f in scan.findings.all %}<tr><td>{{ f.severity }}</td><td>{{ f.name }}</td><td>{{ f.url|truncatechars:60 }}</td></tr>{% endfor %}
+{% for f in findings %}<tr><td>{{ f.severity }}</td><td>{{ f.name }}</td><td>{{ f.url|truncatechars:60 }}</td></tr>{% endfor %}
 </table>
 {% endblock %}

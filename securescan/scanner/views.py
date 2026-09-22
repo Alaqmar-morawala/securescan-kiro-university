@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.views.generic import DetailView, ListView
 
-from .docker_runner import run_scan, seed_estimate
+from .services import ordered_findings, run_scan, seed_estimate
 from .forms import ScanConfigForm, TargetForm
 from .models import Scan, ScanConfig, Target
 from .services import estimate_cost
@@ -68,6 +68,20 @@ class ScanDetailView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         return Scan.objects.filter(owner=self.request.user).select_related("target", "config").prefetch_related("findings")
+
+    def get_context_data(self, **kwargs):
+        from reports.services import ordered_findings  # noqa: F401 — replaced below
+        from scanner.services import order_findings
+
+        ctx = super().get_context_data(**kwargs)
+        raw = [
+            {"severity": f.severity, "name": f.name, "url": f.url, "pk": f.pk}
+            for f in ctx["findings"]
+        ]
+        ordered = {f["pk"]: f for f in order_findings(raw)}
+        ctx["findings"] = [f for f in ctx["findings"] if f.pk in ordered]
+        return ctx
+
 
 
 class ScanProgressView(LoginRequiredMixin, View):

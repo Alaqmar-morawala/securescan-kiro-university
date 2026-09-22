@@ -1,0 +1,8 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "secscan-django",
+  "version": "1.0.0",
+  "description": "Secure Django + OWASP ZAP scan patterns: cost estimation, Docker isolation, severity-ordered reports",
+  "author": { "name": "SecureScan" },
+  "keywords": ["django", "zap", "owasp", "secscan", "scan", "docker", "reportlab", "vulnerability"]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "zap-operator",
+  "description": "Runs isolated ZAP scans: Docker lifecycle + finding triage",
+  "tools": ["read", "shell"],
+  "excludedTools": ["knowledge"],
+  "includeMcpJson": true,
+  "includePowers": true,
+  "resources": ["file://./ARCHITECTURE.md", "skill://scan-patterns"],
+  "permissions": {
+    "rules": [
+      { "capability": "shell", "match": ["docker *", "python *"], "effect": "allow" }
+    ]
+  },
+  "prompt": "You operate SecureScan ZAP jobs. Always use per-scan containers, enforce mock mode in dev/tests, never scan hosts the user does not own, and report severity-ordered findings.",
+  "welcomeMessage": "ZAP operator ready. Which target should I scan?"
+}

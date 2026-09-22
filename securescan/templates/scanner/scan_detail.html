@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Scan #{{ scan.pk }} — {{ scan.target.name }}</h2>
+<p>Status: <b>{{ scan.status }}</b> | Progress: {{ scan.progress }}% | Cost: ${{ scan.cost_estimate }} | Est. {{ scan.duration_estimate_s }}s</p>
+{% if scan.status == "QUEUED" %}
+<form method="post" action="/scans/{{ scan.pk }}/start/">{% csrf_token %}<button class="btn btn-success">Start scan</button></form>
+{% endif %}
+<p class="mt-2"><a class="btn btn-sm btn-outline-primary" href="/scans/{{ scan.pk }}/report.html">HTML report</a> <a class="btn btn-sm btn-outline-secondary" href="/scans/{{ scan.pk }}/report.pdf">PDF report</a></p>
+<h4>Findings ({{ scan.findings.count }})</h4>
+<table class="table table-striped">
+<tr><th>Severity</th><th>Finding</th><th>URL</th></tr>
+{% for f in scan.findings.all %}<tr><td>{{ f.severity }}</td><td>{{ f.name }}</td><td>{{ f.url|truncatechars:60 }}</td></tr>{% endfor %}
+</table>
+{% endblock %}

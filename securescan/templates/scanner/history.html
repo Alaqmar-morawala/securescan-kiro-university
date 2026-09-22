@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Scan history</h2>
+<table class="table table-striped">
+<tr><th>#</th><th>Target</th><th>Type</th><th>Status</th><th>Cost</th><th>Created</th></tr>
+{% for s in scans %}<tr><td><a href="/scans/{{ s.pk }}/">{{ s.pk }}</a></td><td>{{ s.target.name }}</td><td>{{ s.config.scan_type }}</td><td>{{ s.status }}</td><td>${{ s.cost_estimate }}</td><td>{{ s.created_at }}</td></tr>{% empty %}<tr><td colspan="6">No scans.</td></tr>{% endfor %}
+</table>
+{% endblock %}

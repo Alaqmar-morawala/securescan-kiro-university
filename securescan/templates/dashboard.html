@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dashboard</h2>
+<p>Welcome, {{ user.username }}!</p>
+<a class="btn btn-primary mb-3" href="/targets/add/">+ Add website</a>
+<h4>Your targets</h4>
+<ul class="list-group mb-3">
+{% for t in targets %}<li class="list-group-item"><a href="/targets/{{ t.pk }}/configure/">{{ t.name }}</a> — {{ t.url }}</li>{% empty %}<li class="list-group-item">No targets yet.</li>{% endfor %}
+</ul>
+<h4>Recent scans</h4>
+<ul class="list-group">
+{% for s in scans %}<li class="list-group-item"><a href="/scans/{{ s.pk }}/">Scan #{{ s.pk }} {{ s.target.name }}</a> — {{ s.status }} ({{ s.progress }}%)</li>{% empty %}<li class="list-group-item">No scans yet.</li>{% endfor %}
+</ul>
+{% endblock %}

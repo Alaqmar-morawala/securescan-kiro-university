@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-5 bg-light rounded">
+  <h1>SecureScan — scan your own apps for OWASP Top-10 issues</h1>
+  <p class="lead">Isolated Docker + OWASP ZAP scans, cost estimates, severity-classified HTML &amp; PDF reports.</p>
+  <a class="btn btn-primary" href="/accounts/register/">Start scanning</a>
+  <a class="btn btn-outline-secondary" href="/accounts/login/">Login</a>
+</div>
+<h3 class="mt-4">How it works</h3>
+<ol>
+  <li>Add a website you own</li>
+  <li>Configure scan (type, depth, auth, secret header)</li>
+  <li>Run isolated scan, watch progress</li>
+  <li>Download HTML + PDF reports, track history</li>
+</ol>
+{% endblock %}

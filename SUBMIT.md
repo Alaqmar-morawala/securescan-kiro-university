@@ -2,7 +2,7 @@
 
 ## Links
 - Repo: https://github.com/Alaqmar-morawala/securescan-kiro-university
-- Demo video (72s, public): https://github.com/Alaqmar-morawala/securescan-kiro-university/releases/download/final-demo/securescan-demo.mp4
+- Demo video (real end-to-end, ~2m15s): https://github.com/Alaqmar-morawala/securescan-kiro-university/releases/download/final-demo/securescan-demo-real.mp4
 - Terms: https://kiro.dev/2026/university/terms/
 
 ## Still TODO (needs YOU — I can't post as you)

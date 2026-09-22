@@ -8,9 +8,9 @@
 
 - **Goal:** Win Kiro University Challenge 2026 Final Exam credits with the
   SecureScan Django app (also the owner's Parul University SE-lab project).
-- **Status (2026-09-22): BUILD COMPLETE, SUBMISSION PENDING.**
-  App works end-to-end, 9/9 tests pass, repo public + pushed, 72s demo video public.
-  Two human-only actions remain (social post + entry form).
+- **Status (2026-09-23): BUILD COMPLETE, SUBMISSION PENDING.**
+  App works end-to-end, 9/9 tests pass, repo public + pushed, real 2m15s demo
+  video public. Two human-only actions remain (social post + entry form).
 - **Expected award on free plan: 5,000 credits**
   (7 lessons + completion + Bonus 2; Bonus 1 cloud is paid-only, not claimed).
 
@@ -20,7 +20,7 @@
 |---|---|
 | Local repo root | `/home/alaqmar/pentest001/challenge` (git; app in `securescan/`) |
 | Public GitHub | `https://github.com/Alaqmar-morawala/securescan-kiro-university` (`main`) |
-| Demo video (72s) | `https://github.com/Alaqmar-morawala/securescan-kiro-university/releases/download/final-demo/securescan-demo.mp4` (release `final-demo`; local `demo/securescan-demo.mp4`) |
+| Demo video (real E2E, ~2m15s) | `https://github.com/Alaqmar-morawala/securescan-kiro-university/releases/download/final-demo/securescan-demo-real.mp4` (release `final-demo`; local `demo/v2/securescan-demo-real.mp4`) |
 | Challenge page | `https://kiro.dev/2026/university/` |
 | Terms (binding) | `https://kiro.dev/2026/university/terms/` |
 | Entry form | Opens **Fri Sep 25** at challenge page, due **Mon Oct 5, 23:59 PT** |
@@ -135,7 +135,12 @@ rm -f db.sqlite3   # IMPORTANT: never commit db.sqlite3 (gitignored)
   JS-heavy; fetcher returned shell only). Extracts: `/tmp/lessons/` (not in git).
 - 5,250 is impossible on free plan (Bonus 1 = paid only); target is 5,000 —
   documented in README + SUBMIT + CLOUD. Don't promise 5,250.
-- Video is a screenshot slideshow (72s), not live capture — meets 30s–3min rule,
-  already public via `final-demo` release. Replacing it means updating release +
-  SUBMIT.md + entry form consistently.
+- Video is a REAL end-to-end recording (~2m15s, 873 CDP screenshots @30fps):
+  register → scan → reports → history → GitHub .kiro evidence → 9/9 tests, with
+  on-screen banners. Source frames/script: `demo/v2/`. Re-record only if behavior
+  changes (then re-clobber the `final-demo` asset so the URL in SUBMIT.md holds).
+- Commit history was rewritten (git filter-branch) so ALL commits are authored by
+  `Alaqmar-morawala <232421638+Alaqmar-morawala@users.noreply.github.com>` — the
+  parul email maps to the `saif-pvt` GitHub account (second account, disallowed).
+  Local git config now uses the noreply address; NEVER reintroduce the parul email.
 

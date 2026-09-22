@@ -1,8 +1,6 @@
 
-DevTools listening on ws://127.0.0.1:9222/devtools/browser/024cab0a-b235-4cb4-8b86-1b83d1f97362
-[1342969:1343001:0923/004514.646508:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
-[1342969:1343001:0923/004535.000450:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
-[1342969:1343001:0923/004630.683196:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
-[1342969:1342969:0923/004737.295241:ERROR:content/common/zygote/zygote_communication_linux.cc:291] Failed to send GetTerminationStatus message to zygote
-[1342969:1343001:0923/004737.298920:ERROR:google_apis/gcm/engine/connection_factory_impl.cc:484] ConnectionHandler failed with net error: -2
-[1342969:1342969:0923/004737.298925:ERROR:content/common/zygote/zygote_communication_linux.cc:291] Failed to send GetTerminationStatus message to zygote
+DevTools listening on ws://127.0.0.1:9222/devtools/browser/69b13380-ca97-4f38-a9f3-e80d5885482f
+[1352141:1352174:0923/005313.947035:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[1352141:1352174:0923/005343.384139:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[1352141:1352174:0923/005438.754755:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[1352141:1352141:0923/005538.755152:ERROR:content/common/zygote/zygote_communication_linux.cc:291] Failed to send GetTerminationStatus message to zygote

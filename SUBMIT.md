@@ -2,7 +2,9 @@
 
 ## Links
 - Repo: https://github.com/Alaqmar-morawala/securescan-kiro-university
-- Demo video (real end-to-end, ~2m15s): https://github.com/Alaqmar-morawala/securescan-kiro-university/releases/download/final-demo/securescan-demo-real.mp4
+- Demo video (real E2E, ~2m15s): https://github.com/Alaqmar-morawala/securescan-kiro-university/releases/download/final-demo/securescan-demo-real.mp4
+  — regenerate with `demo/v2/record.sh` + `demo/v2/assemble.sh` (CDP screencast), then
+  `gh release delete final-demo -y && git push origin :refs/tags/final-demo && gh release create final-demo demo/v2/securescan-demo-real.mp4`.
 - Terms: https://kiro.dev/2026/university/terms/
 
 ## Still TODO (needs YOU — I can't post as you)

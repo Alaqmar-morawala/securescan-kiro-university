@@ -8,5 +8,7 @@
 - [x] 6. Scan run: start/progress/detail views (mock mode default)
 - [x] 7. Reports: HTML + PDF export + history view
 - [x] 8. Kiro lesson artifacts: steering, hooks, PBT, power install+create, MCP, agents
-- [ ] 9. Run test suite (example + property tests), fix failures
-- [ ] 10. Demo video script + README lesson map + entry form submission
+- [x] 9. Run test suite (example + property tests), fix failures (9/9 green)
+- [x] 10. Demo video script + README lesson map + entry form submission (video public; form opens Sep 25)
+- [ ] 11. Hardening (pre-freeze, ≤ Oct 4): severity badges, progress auto-refresh, secret-header tests, estimate edge PBT, PDF summary, pagination, ZAP retry, admin registration, CSV export
+

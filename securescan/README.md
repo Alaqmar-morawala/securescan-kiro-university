@@ -25,7 +25,10 @@ with deterministic findings — no Docker or network needed for judges.
 | 7. Custom agents (1000) | `.kiro/agents/securescan-reviewer.json`, `.kiro/agents/zap-operator.json` |
 | Completion (all 7) | +1000 |
 | Bonus 2 — create a power (250) | `powers/secscan-django/` is an original power created for this project (manifest + skill + refs + MCP) |
-| Bonus 1 — cloud (paid only) | Free plan — attempting `kiro-cli --cloud` from this repo; documenting result in `CLOUD.md`. Not claimed if unavailable. |
+| Bonus 1 — cloud (paid only) | Free plan — see `CLOUD.md`. Not claimed. |
+
+**Expected total on free plan: 5,000 credits** (5,250 with paid cloud bonus).
+
 
 ## Demo video script (60–90s)
 1. Landing → register/login (auth).

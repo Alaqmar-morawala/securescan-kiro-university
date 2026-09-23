@@ -15,7 +15,9 @@ class TargetForm(forms.ModelForm):
         url = self.cleaned_data["url"].strip()
         URLValidator(schemes=["http", "https"])(url)
         if not (url.startswith("http://") or url.startswith("https://")):
-            raise forms.ValidationError("URL must start with http:// or https://")
+            raise forms.ValidationError(
+                "URL must start with http:// or https://"
+            )
         return url
 
 

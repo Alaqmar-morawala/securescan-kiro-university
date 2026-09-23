@@ -61,14 +61,26 @@ class MockZapClient:
         return [base + "/", base + "/about", base + "/contact"]
 
     def active_scan(self) -> list[dict]:
-        findings = [dict(f, url=f["url"].replace("https://target.example", self.target_url.rstrip("/"))) for f in MOCK_FINDINGS]
+        findings = [
+            dict(
+                f,
+                url=f["url"].replace(
+                    "https://target.example",
+                    self.target_url.rstrip("/"),
+                ),
+            )
+            for f in MOCK_FINDINGS
+        ]
         if self.scan_type == "baseline":
             return [f for f in findings if f["severity"] in ("High", "Medium")]
         return findings
 
 
 class ZapClient:
-    """Thin wrapper over ZAP REST API (used when SECURESCAN_MOCK=0 + real ZAP)."""
+    """Thin wrapper over ZAP REST API.
+
+    Used when SECURESCAN_MOCK=0 + real ZAP.
+    """
 
     def __init__(self, zap_base: str, api_key: str = ""):
         self.base = zap_base.rstrip("/")

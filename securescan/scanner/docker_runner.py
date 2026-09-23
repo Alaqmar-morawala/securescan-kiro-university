@@ -28,14 +28,20 @@ def run_scan(scan) -> None:
     try:
         if _mock_mode():
             client = MockZapClient(scan.target.url, scan.config.scan_type)
-            pages = client.spider()
+            client.spider()  # exercise spider path; URLs discarded in mock
             scan.progress = 45
             scan.save(update_fields=["progress"])
             raw = client.active_scan()
             ordered = order_findings(raw)
             scan.findings.all().delete()
+            finding_fields = (
+                "name", "severity", "url", "description", "solution", "cwe",
+            )
             for f in ordered:
-                Finding.objects.create(scan=scan, **{k: f.get(k, "") for k in ("name", "severity", "url", "description", "solution", "cwe")})
+                Finding.objects.create(
+                    scan=scan,
+                    **{k: f.get(k, "") for k in finding_fields},
+                )
             scan.progress = 100
             scan.status = "DONE"
             scan.finished_at = timezone.now()
@@ -56,7 +62,10 @@ def run_scan(scan) -> None:
         # NOTE: production would wait-for-ZAP, drive spider+active scan via
         # ZapClient, update progress 10..90, then persist alerts.
         # Minimal safe fallback so real path never silently succeeds:
-        raise RuntimeError("Real ZAP orchestration not configured in this build; set SECURESCAN_MOCK=1.")
+        raise RuntimeError(
+            "Real ZAP orchestration not configured in this build; "
+            "set SECURESCAN_MOCK=1."
+        )
     except Exception as exc:  # noqa: BLE001 - record any failure on the scan
         scan.status = "FAILED"
         scan.error = str(exc)[:2000]

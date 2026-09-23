@@ -6,10 +6,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.views.generic import DetailView, ListView
 
-from .services import ordered_findings, run_scan, seed_estimate
+from .docker_runner import run_scan, seed_estimate
 from .forms import ScanConfigForm, TargetForm
-from .models import Scan, ScanConfig, Target
-from .services import estimate_cost
+from .models import Scan, Target
+from .services import estimate_cost, order_findings
 
 
 class TargetCreateView(LoginRequiredMixin, View):
@@ -36,7 +36,10 @@ class ScanConfigView(LoginRequiredMixin, View):
 
     def get(self, request, pk):
         target = self._target(request, pk)
-        return render(request, self.template_name, {"target": target, "form": ScanConfigForm()})
+        return render(
+            request, self.template_name,
+            {"target": target, "form": ScanConfigForm()},
+        )
 
     def post(self, request, pk):
         target = self._target(request, pk)
@@ -45,13 +48,20 @@ class ScanConfigView(LoginRequiredMixin, View):
             config = form.save(commit=False)
             config.target = target
             config.save()
-            cost, duration = estimate_cost(config.max_pages, config.spider_depth, config.scan_type)
+            cost, duration = estimate_cost(
+                config.max_pages, config.spider_depth, config.scan_type
+            )
             scan = Scan.objects.create(
                 owner=request.user, target=target, config=config,
                 cost_estimate=cost, duration_estimate_s=duration,
             )
-            return redirect("scanner:scan_detail", pk=scan.pk)
-        return render(request, self.template_name, {"target": target, "form": form})
+            return redirect(
+                "scanner:scan_detail", pk=scan.pk
+            )
+        return render(
+            request, self.template_name,
+            {"target": target, "form": form},
+        )
 
 
 class ScanStartView(LoginRequiredMixin, View):
@@ -67,21 +77,26 @@ class ScanDetailView(LoginRequiredMixin, DetailView):
     template_name = "scanner/scan_detail.html"
 
     def get_queryset(self):
-        return Scan.objects.filter(owner=self.request.user).select_related("target", "config").prefetch_related("findings")
+        return (
+            Scan.objects.filter(owner=self.request.user)
+            .select_related("target", "config")
+            .prefetch_related("findings")
+        )
 
     def get_context_data(self, **kwargs):
-        from reports.services import ordered_findings  # noqa: F401 — replaced below
-        from scanner.services import order_findings
-
         ctx = super().get_context_data(**kwargs)
         raw = [
             {"severity": f.severity, "name": f.name, "url": f.url, "pk": f.pk}
             for f in ctx["findings"]
         ]
-        ordered = {f["pk"]: f for f in order_findings(raw)}
-        ctx["findings"] = [f for f in ctx["findings"] if f.pk in ordered]
+        # order_findings sorts by severity (High > Medium > Low > Info);
+        # preserve that order when mapping back to model instances.
+        ordered_pks = [f["pk"] for f in order_findings(raw)]
+        pk_to_finding = {f.pk: f for f in ctx["findings"]}
+        ctx["findings"] = [
+            pk_to_finding[pk] for pk in ordered_pks if pk in pk_to_finding
+        ]
         return ctx
-
 
 
 class ScanProgressView(LoginRequiredMixin, View):
@@ -96,5 +111,7 @@ class ScanHistoryView(LoginRequiredMixin, ListView):
     context_object_name = "scans"
 
     def get_queryset(self):
-        return Scan.objects.filter(owner=self.request.user).select_related("target", "config")
-
+        return (
+            Scan.objects.filter(owner=self.request.user)
+            .select_related("target", "config")
+        )

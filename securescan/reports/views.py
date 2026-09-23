@@ -12,7 +12,9 @@ from .services import build_pdf_bytes, ordered_findings
 
 def _scan_for(request, pk):
     return get_object_or_404(
-        Scan.objects.select_related("target", "config").prefetch_related("findings"),
+        Scan.objects.select_related("target", "config").prefetch_related(
+            "findings"
+        ),
         pk=pk,
         owner=request.user,
     )
@@ -33,6 +35,7 @@ class ReportPdfView(LoginRequiredMixin, View):
         scan = _scan_for(request, pk)
         pdf = build_pdf_bytes(scan)
         resp = HttpResponse(pdf, content_type="application/pdf")
-        resp["Content-Disposition"] = f'attachment; filename="securescan-{scan.pk}.pdf"'
+        resp["Content-Disposition"] = (
+            f'attachment; filename="securescan-{scan.pk}.pdf"'
+        )
         return resp
-

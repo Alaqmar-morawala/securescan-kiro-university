@@ -8,7 +8,9 @@ PER_UNIT = Decimal("0.02")
 BASE_SECONDS = 20
 
 
-def estimate_cost(pages: int, depth: int, scan_type: str) -> tuple[Decimal, int]:
+def estimate_cost(
+    pages: int, depth: int, scan_type: str
+) -> tuple[Decimal, int]:
     """Return (cost, duration_seconds).
 
     Property P1: monotonic non-decreasing in pages and depth for a fixed type.
@@ -29,5 +31,8 @@ def order_findings(findings: list[dict]) -> list[dict]:
     """Sort findings by severity High > Medium > Low > Info, then name."""
     return sorted(
         findings,
-        key=lambda f: (-SEVERITY_RANK.get(f.get("severity", "Info"), 0), f.get("name", "")),
+        key=lambda f: (
+            -SEVERITY_RANK.get(f.get("severity", "Info"), 0),
+            f.get("name", ""),
+        ),
     )

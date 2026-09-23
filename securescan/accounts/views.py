@@ -16,7 +16,9 @@ class RegisterView(View):
     def get(self, request):
         if request.user.is_authenticated:
             return redirect("/accounts/")
-        return render(request, self.template_name, {"form": UserCreationForm()})
+        return render(
+            request, self.template_name, {"form": UserCreationForm()}
+        )
 
     def post(self, request):
         form = UserCreationForm(request.POST)
@@ -35,4 +37,3 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         ctx["targets"] = Target.objects.filter(owner=self.request.user)[:10]
         ctx["scans"] = Scan.objects.filter(owner=self.request.user)[:10]
         return ctx
-

@@ -11,4 +11,6 @@
 - [x] 9. Run test suite (example + property tests), fix failures (9/9 green)
 - [x] 10. Demo video script + README lesson map + entry form submission (video public; form opens Sep 25)
 - [ ] 11. Hardening (pre-freeze, ≤ Oct 4): severity badges, progress auto-refresh, secret-header tests, estimate edge PBT, PDF summary, pagination, ZAP retry, admin registration, CSV export
+- [x] 12. P3 real PBT + hook smoke-test target (Sep 23): `test_history_newest_first_property` (hypothesis 100 examples,
+  view+ORM ordering + owner isolation), `tests/test_smoke.py` wired to `hooks/python-checks.json` — 11/11 green
 

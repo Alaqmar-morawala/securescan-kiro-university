@@ -1,5 +1,6 @@
 {% extends "base.html" %}
+{% block title %}Register — SecureScan{% endblock %}
 {% block content %}
-<h2>Register</h2>
-<form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary">Create account</button></form>
+<div class="page-head"><div><h2>Create your account</h2><p class="muted">One account, your targets, your scans — nothing shared.</p></div></div>
+<section class="card form-card"><form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn solid">Create account</button></form></section>
 {% endblock %}

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
+{% block title %}Configure scan — {{ target.name }}{% endblock %}
 {% block content %}
-<h2>Configure scan — {{ target.name }}</h2>
-<p>{{ target.url }}</p>
-<form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary">Estimate &amp; create scan</button></form>
+<div class="page-head"><div><h2>Configure scan &mdash; {{ target.name }}</h2><p class="muted mono">{{ target.url }}</p></div></div>
+<section class="card form-card"><form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn solid">Estimate &amp; create scan</button></form></section>
 {% endblock %}

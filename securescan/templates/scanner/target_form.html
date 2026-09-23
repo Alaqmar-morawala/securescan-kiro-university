@@ -1,5 +1,6 @@
 {% extends "base.html" %}
+{% block title %}Add website — SecureScan{% endblock %}
 {% block content %}
-<h2>Add website</h2>
-<form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary">Save &amp; configure scan</button></form>
+<div class="page-head"><div><h2>Add website</h2><p class="muted">Only add apps you own. http/https URLs only.</p></div></div>
+<section class="card form-card"><form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn solid">Save &amp; configure scan</button></form></section>
 {% endblock %}

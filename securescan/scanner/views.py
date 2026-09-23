@@ -85,14 +85,15 @@ class ScanDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
+        findings = list(ctx["object"].findings.all())
         raw = [
             {"severity": f.severity, "name": f.name, "url": f.url, "pk": f.pk}
-            for f in ctx["findings"]
+            for f in findings
         ]
         # order_findings sorts by severity (High > Medium > Low > Info);
         # preserve that order when mapping back to model instances.
         ordered_pks = [f["pk"] for f in order_findings(raw)]
-        pk_to_finding = {f.pk: f for f in ctx["findings"]}
+        pk_to_finding = {f.pk: f for f in findings}
         ctx["findings"] = [
             pk_to_finding[pk] for pk in ordered_pks if pk in pk_to_finding
         ]

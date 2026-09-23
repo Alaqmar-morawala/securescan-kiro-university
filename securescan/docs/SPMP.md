@@ -9,7 +9,7 @@ Non-goals: third-party scanning (authz enforced), real-time collaboration.
 ## 2. Schedule (Agile, 6 sprints)
 
 See `SPRINTS.md`. Sprint exit criteria: spec tasks checked in
-`.kiro/specs/securescan/tasks.md` + `pytest` green (currently 11/11).
+`.kiro/specs/securescan/tasks.md` + `pytest` green (currently 16/16).
 
 ## 3. Team & roles (coursework mapping)
 

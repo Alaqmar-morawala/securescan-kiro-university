@@ -1,14 +1,22 @@
 {% extends "base.html" %}
+{% block title %}Dashboard — SecureScan{% endblock %}
 {% block content %}
-<h2>Dashboard</h2>
-<p>Welcome, {{ user.username }}!</p>
-<a class="btn btn-primary mb-3" href="/targets/add/">+ Add website</a>
-<h4>Your targets</h4>
-<ul class="list-group mb-3">
-{% for t in targets %}<li class="list-group-item"><a href="/targets/{{ t.pk }}/configure/">{{ t.name }}</a> — {{ t.url }}</li>{% empty %}<li class="list-group-item">No targets yet.</li>{% endfor %}
-</ul>
-<h4>Recent scans</h4>
-<ul class="list-group">
-{% for s in scans %}<li class="list-group-item"><a href="/scans/{{ s.pk }}/">Scan #{{ s.pk }} {{ s.target.name }}</a> — {{ s.status }} ({{ s.progress }}%)</li>{% empty %}<li class="list-group-item">No scans yet.</li>{% endfor %}
-</ul>
+<div class="page-head">
+  <div><h2>Dashboard</h2><p class="muted">Welcome, {{ user.username }}!</p></div>
+  <a class="btn solid" href="/targets/add/">+ Add website</a>
+</div>
+<div class="grid-2">
+  <section class="card" aria-label="Your targets">
+    <h3>Your targets</h3>
+    <ul class="list">
+    {% for t in targets %}<li><span><a href="/targets/{{ t.pk }}/configure/">{{ t.name }}</a><br><span class="muted small mono">{{ t.url }}</span></span><span class="badge sev-info">target</span></li>{% empty %}<li class="empty">No targets yet — add your first website.</li>{% endfor %}
+    </ul>
+  </section>
+  <section class="card" aria-label="Recent scans">
+    <h3>Recent scans</h3>
+    <ul class="list">
+    {% for s in scans %}<li><span><a href="/scans/{{ s.pk }}/">Scan #{{ s.pk }} &middot; {{ s.target.name }}</a><br><span class="muted small">{{ s.status }} &middot; {{ s.progress }}%</span></span><span class="status-chip status-{{ s.status|lower }}">{{ s.status }}</span></li>{% empty %}<li class="empty">No scans yet.</li>{% endfor %}
+    </ul>
+  </section>
+</div>
 {% endblock %}

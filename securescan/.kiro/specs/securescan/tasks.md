@@ -13,4 +13,8 @@
 - [ ] 11. Hardening (pre-freeze, ≤ Oct 4): severity badges, progress auto-refresh, secret-header tests, estimate edge PBT, PDF summary, pagination, ZAP retry, admin registration, CSV export
 - [x] 12. P3 real PBT + hook smoke-test target (Sep 23): `test_history_newest_first_property` (hypothesis 100 examples,
   view+ORM ordering + owner isolation), `tests/test_smoke.py` wired to `hooks/python-checks.json` — 11/11 green
+- [x] 13. Frontier UI + E2E lock-in (Sep 23): self-hosted dark theme (`static/css/securescan.css`, no Bootstrap CDN),
+  severity badges (`sev-high/medium/low/info`), status chips, live progress polling (`data-progress-url` + `static/js/securescan.js`),
+  fixed `ScanDetailView` KeyError (`ctx["findings"]` never existed for DetailView); new `tests/test_ui_frontier.py`
+  (5 tests: full flow, severity order, progress contract, cross-user 404s, PDF auth) — 16/16 green
 

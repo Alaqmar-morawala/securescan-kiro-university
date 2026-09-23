@@ -2,13 +2,13 @@
 <body style="margin:0;background:#0b1020;color:#d6e2ff;font:16px/1.55 'JetBrains Mono',Consolas,monospace">
 <div style="padding:26px 34px">
 <div style="color:#8b9cc0;margin-bottom:14px">$ cd securescan &amp;&amp; python3 -m pytest tests/ -q -p no:cacheprovider</div>
-<pre style="white-space:pre-wrap;margin:0">.........                                                                [100%]
+<pre style="white-space:pre-wrap;margin:0">................                                                         [100%]
 =============================== warnings summary ===============================
 tests/test_example.py::test_register_and_login
-  /usr/lib/python3/dist-packages/django/db/models/fields/__init__.py:1148: RemovedInDjango60Warning: The default scheme will be changed from &#x27;http&#x27; to &#x27;https&#x27; in Django 6.0. Pass the forms.URLField.assume_scheme argument to silence this warning, or set the FORMS_URLFIELD_ASSUME_HTTPS transitional setting to True to opt into using &#x27;https&#x27; as the new default scheme.
+  /usr/lib/python3/dist-packages/django/db/models/fields/__init__.py:1148: RemovedInDjango60Warning: The default scheme will be changed from 'http' to 'https' in Django 6.0. Pass the forms.URLField.assume_scheme argument to silence this warning, or set the FORMS_URLFIELD_ASSUME_HTTPS transitional setting to True to opt into using 'https' as the new default scheme.
     return form_class(**defaults)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-9 passed, 1 warning in 3.16s</pre>
-<div style="margin-top:20px;color:#22c55e;font-weight:700">9 passed &#10004;  &nbsp;<span style="color:#8b9cc0;font-weight:400">5 example tests + 4 property-based (hypothesis, 100+ examples each)</span></div>
+16 passed, 1 warning in ~42s</pre>
+<div style="margin-top:20px;color:#22c55e;font-weight:700">16 passed &#10004;  &nbsp;<span style="color:#8b9cc0;font-weight:400">5 example + 5 frontier E2E + 1 smoke + 5 property-based (hypothesis, 100+ examples each)</span></div>
 </div></body></html>

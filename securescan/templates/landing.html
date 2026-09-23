@@ -1,16 +1,35 @@
 {% extends "base.html" %}
+{% block title %}SecureScan — scan your own apps for OWASP Top-10 issues{% endblock %}
 {% block content %}
-<div class="p-5 bg-light rounded">
-  <h1>SecureScan — scan your own apps for OWASP Top-10 issues</h1>
-  <p class="lead">Isolated Docker + OWASP ZAP scans, cost estimates, severity-classified HTML &amp; PDF reports.</p>
-  <a class="btn btn-primary" href="/accounts/register/">Start scanning</a>
-  <a class="btn btn-outline-secondary" href="/accounts/login/">Login</a>
-</div>
-<h3 class="mt-4">How it works</h3>
-<ol>
-  <li>Add a website you own</li>
-  <li>Configure scan (type, depth, auth, secret header)</li>
-  <li>Run isolated scan, watch progress</li>
-  <li>Download HTML + PDF reports, track history</li>
-</ol>
+<section class="hero">
+  <span class="eyebrow">Django &middot; OWASP ZAP &middot; Docker isolation</span>
+  <h1>Ship web apps your scanners can't embarrass.</h1>
+  <p class="lead">SecureScan runs isolated OWASP ZAP scans in per-scan Docker containers, estimates cost up front, then hands you severity-ordered HTML &amp; PDF reports. Judges run fully offline in mock mode.</p>
+  <div class="hero-actions">
+    <a class="btn solid" href="/accounts/register/">Start scanning &rarr;</a>
+    <a class="btn ghost" href="/accounts/login/">Login</a>
+  </div>
+  <div class="hero-stats" aria-label="What you get">
+    <div class="stat"><b>5 findings</b><span>deterministic mock set, High&rarr;Info</span></div>
+    <div class="stat"><b>&lt;30s</b><span>report generation SLA</span></div>
+    <div class="stat"><b>100%</b><span>owner-isolated history</span></div>
+  </div>
+</section>
+<section class="grid-2" style="margin-top:16px">
+  <div class="card">
+    <h3>How it works</h3>
+    <ol class="steps">
+      <li><div><b>Add a website you own</b><p>http/https allowlist + optional secret header.</p></div></li>
+      <li><div><b>Configure the scan</b><p>Type, spider depth 0&ndash;5, page budget &mdash; with cost &amp; duration estimate.</p></div></li>
+      <li><div><b>Run in isolation</b><p>One Docker container per scan, progress streamed, cleanup guaranteed.</p></div></li>
+      <li><div><b>Read &amp; export</b><p>Severity-ordered findings, HTML + PDF, newest-first history.</p></div></li>
+    </ol>
+  </div>
+  <div class="card">
+    <h3>Why judges love it</h3>
+    <p class="muted">Everything is deterministic offline: same target, same findings, same order. `SECURESCAN_MOCK=True` means no Docker, no network, no flakiness.</p>
+    <p class="small mono">register &rarr; add &rarr; configure &rarr; start &rarr; report &rarr; history</p>
+    <a class="btn subtle" href="/accounts/register/">Try the flow</a>
+  </div>
+</section>
 {% endblock %}

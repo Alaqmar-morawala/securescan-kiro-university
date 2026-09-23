@@ -1,10 +1,20 @@
 {% extends "base.html" %}
+{% block title %}Report — Scan #{{ scan.pk }} {{ scan.target.name }}{% endblock %}
 {% block content %}
-<h2>Report — Scan #{{ scan.pk }} {{ scan.target.name }}</h2>
-<p>{{ scan.target.url }} | {{ scan.config.scan_type }} | {{ scan.status }} | ${{ scan.cost_estimate }}</p>
-<table class="table table-striped">
-<tr><th>Severity</th><th>Finding</th><th>URL</th><th>Fix</th></tr>
-{% for f in findings %}<tr><td>{{ f.severity }}</td><td>{{ f.name }}<br><small>{{ f.description }}</small></td><td>{{ f.url|truncatechars:50 }}</td><td>{{ f.solution }}</td></tr>{% endfor %}
-</table>
-<a class="btn btn-secondary" href="/scans/{{ scan.pk }}/report.pdf">Download PDF</a>
+<div class="page-head">
+  <div><h2>Report &mdash; Scan #{{ scan.pk }} &middot; {{ scan.target.name }}</h2><p class="muted mono">{{ scan.target.url }}</p></div>
+  <a class="btn solid" href="/scans/{{ scan.pk }}/report.pdf">Download PDF</a>
+</div>
+<section class="card">
+  <div class="kv">
+    <div><dt>Type</dt><dd>{{ scan.config.scan_type }}</dd></div>
+    <div><dt>Status</dt><dd><span class="status-chip status-{{ scan.status|lower }}">{{ scan.status }}</span></dd></div>
+    <div><dt>Cost</dt><dd>${{ scan.cost_estimate }}</dd></div>
+    <div><dt>Findings</dt><dd>{{ findings|length }}</dd></div>
+  </div>
+  <div class="table-wrap"><table class="data">
+    <tr><th>Severity</th><th>Finding</th><th>URL</th><th>Fix</th></tr>
+    {% for f in findings %}<tr><td><span class="badge sev-{{ f.severity|lower }}">{{ f.severity }}</span></td><td>{{ f.name }}<br><small class="muted">{{ f.description }}</small></td><td class="mono small">{{ f.url|truncatechars:50 }}</td><td class="small">{{ f.solution }}</td></tr>{% endfor %}
+  </table></div>
+</section>
 {% endblock %}

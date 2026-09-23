@@ -9,7 +9,7 @@
 - **Goal:** Win Kiro University Challenge 2026 Final Exam credits with the
   SecureScan Django app (also the owner's Parul University SE-lab project).
 - **Status (2026-09-23): BUILD COMPLETE, SUBMISSION PENDING.**
-  App works end-to-end, 11/11 tests pass, repo public + pushed, real 2m15s demo
+  App works end-to-end, 16/16 tests pass, repo public + pushed, real 2m15s demo
   video public. Two human-only actions remain (social post + entry form).
 - **Expected award on free plan: 5,000 credits**
   (7 lessons + completion + Bonus 2; Bonus 1 cloud is paid-only, not claimed).
@@ -70,7 +70,7 @@
 
 ```bash
 cd /home/alaqmar/pentest001/challenge/securescan
-python3 -m pytest tests/ -q -p no:cacheprovider   # expect: 11 passed
+python3 -m pytest tests/ -q -p no:cacheprovider   # expect: 16 passed
 python3 manage.py check                            # expect: no issues
 python3 manage.py migrate && python3 manage.py runserver 127.0.0.1:8472
 # register → /targets/add/ (https://example.com) → configure (full, depth 3,
@@ -136,7 +136,7 @@ rm -f db.sqlite3   # IMPORTANT: never commit db.sqlite3 (gitignored)
 - 5,250 is impossible on free plan (Bonus 1 = paid only); target is 5,000 —
   documented in README + SUBMIT + CLOUD. Don't promise 5,250.
 - Video is a REAL end-to-end recording (~2m15s, 873 CDP screenshots @30fps):
-  register → scan → reports → history → GitHub .kiro evidence → 11/11 tests, with
+  register → scan → reports → history → GitHub .kiro evidence → 16/16 tests, with
   on-screen banners. Source frames/script: `demo/v2/`. Re-record only if behavior
   changes (then re-clobber the `final-demo` asset so the URL in SUBMIT.md holds).
 - Commit history was rewritten (git filter-branch) so ALL commits are authored by

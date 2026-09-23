@@ -97,7 +97,7 @@ hold(2.6)
 
 print("=== 10. tests (green) ===")
 p.goto("file:///home/alaqmar/pentest001/challenge/demo/v2/tests.html", settle=1.8)
-p.banner("Verification: 9/9 tests green (5 example + 4 property-based)", 2.2)
+p.banner("Verification: 16/16 tests green (E2E + example + property-based)", 2.2)
 hold(3.2)
 p.banner("Thanks for watching — SecureScan, built with Kiro", 2.2)
 hold(2.0)

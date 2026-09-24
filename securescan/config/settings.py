@@ -10,22 +10,49 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Deployment target detection: Vercel sets VERCEL=1 in its build/runtime.
+ON_VERCEL = os.environ.get('VERCEL') == '1'
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-btcj^j)z4ve#q-7s+@xkt=bih3y+m^bk9@hr-+has+3_aurg&*'
+# Set SECRET_KEY in the Vercel project env vars; the fallback keeps a local
+# clone-and-run working (mock-mode demo, no user data at rest).
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-btcj^j)z4ve#q-7s+@xkt=bih3y+m^bk9@hr-+has+3_aurg&*',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get(
+    'DEBUG', 'false' if ON_VERCEL else 'true'
+).lower() in ('1', 'true', 'yes', 'on')
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver']
+if ON_VERCEL:
+    # '.vercel.app' covers production + every preview deployment URL.
+    ALLOWED_HOSTS = ['.vercel.app', 'testserver']
+    _extra_hosts = os.environ.get('ALLOWED_HOSTS', '')
+    if _extra_hosts:
+        ALLOWED_HOSTS += [
+            h.strip() for h in _extra_hosts.split(',') if h.strip()
+        ]
+
+# HTTPS origins trusted for CSRF (vercel domains + env overrides).
+CSRF_TRUSTED_ORIGINS = ['https://*.vercel.app']
+_extra_origins = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
+if _extra_origins:
+    CSRF_TRUSTED_ORIGINS += [
+        o.strip() for o in _extra_origins.split(',') if o.strip()
+    ]
 
 
 # Application definition
@@ -52,6 +79,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# WhiteNoise serves static files on serverless (no CDN/collectstatic step).
+# Import-guarded so a plain local clone still runs without the package.
+try:
+    import whitenoise  # noqa: F401
+
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+except ImportError:  # pragma: no cover - local dev without whitenoise
+    pass
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -75,12 +111,34 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# SQLite works locally; on Vercel the filesystem is read-only except /tmp,
+# so the demo uses ephemeral SQLite there (schema created on cold start in
+# config/wsgi.py). Set DATABASE_URL to switch to Postgres in production
+# (requires a driver, e.g. psycopg[binary], in requirements.txt).
+_database_url = os.environ.get('DATABASE_URL', '')
+if _database_url.startswith(('postgres://', 'postgresql://')):
+    from urllib.parse import urlparse
+
+    _db = urlparse(_database_url)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': _db.path.lstrip('/'),
+            'USER': _db.username,
+            'PASSWORD': _db.password,
+            'HOST': _db.hostname,
+            'PORT': _db.port or 5432,
+            'CONN_MAX_AGE': 600,
+            'OPTIONS': {'sslmode': 'require'},
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': '/tmp/db.sqlite3' if ON_VERCEL else BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -121,11 +179,43 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
+# collectstatic target (on Vercel only /tmp is writable).
+STATIC_ROOT = os.environ.get(
+    'STATIC_ROOT',
+    '/tmp/staticfiles' if ON_VERCEL else str(BASE_DIR / 'staticfiles'),
+)
+
+# Serve static straight from the finders so serverless needs no build step.
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_AUTOREFRESH = DEBUG
+
+# On serverless only /tmp is writable; create STATIC_ROOT early so WhiteNoise
+# (instantiated during get_wsgi_application) does not warn about a missing dir.
+if ON_VERCEL:
+    try:
+        os.makedirs(STATIC_ROOT, exist_ok=True)
+    except OSError:
+        pass
+
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 
 SECURESCAN_MOCK = True  # demo/test mode: no Docker or network required
+
+if not DEBUG:
+    # Vercel terminates TLS at the edge and forwards this header.
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    # Modest HSTS: this is a demo deployment on a shared vercel.app host, so
+    # deliberately no includeSubDomains/preload.
+    SECURE_HSTS_SECONDS = 3600
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = 'same-origin'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

@@ -11,12 +11,9 @@
 1. **Social post (X or LinkedIn)** — required. Must include:
    - repo link, 2–3 sentence description, `#KiroUniversity` + `#BuildWithKiro`,
      tag `@kirodotdev` (X) or `@kiro` (LinkedIn), + public demo video link above.
-   - Suggested text:
-     > I built SecureScan for the Kiro University Challenge — a Django SaaS that
-     > runs isolated OWASP ZAP scans in per-scan Docker containers with cost
-     > estimates and severity-ordered HTML/PDF reports, built spec-first with Kiro.
-     > #KiroUniversity #BuildWithKiro @kirodotdev
-     > https://github.com/Alaqmar-morawala/securescan-kiro-university
+   - Final, character-checked copy for both networks: [`SOCIAL.md`](SOCIAL.md).
+   - Post from the account matching GitHub user `Alaqmar-morawala`, then paste
+     the public post URL into the entry form.
 2. **Entry form** (opens Fri Sep 25 at https://kiro.dev/2026/university) — submit by
    **Mon Oct 5, 23:59 PT** with: GitHub repo link, demo video link, social post link,
    2–3 sentence description, per-lesson writeup (use `securescan/README.md` evidence map),

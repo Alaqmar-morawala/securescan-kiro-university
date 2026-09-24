@@ -16,8 +16,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Deployment target detection: Vercel sets VERCEL=1 in its build/runtime.
-ON_VERCEL = os.environ.get('VERCEL') == '1'
+# Deployment target detection: Vercel sets VERCEL=1 in build/runtime.
+ON_VERCEL = os.environ.get('VERCEL', '').lower() not in ('', '0', 'false')
 
 
 # Quick-start development settings - unsuitable for production

@@ -2,7 +2,22 @@
 
 from __future__ import annotations
 
-import requests
+
+def _requests():
+    """Import ``requests`` lazily.
+
+    Mock mode (`SECURESCAN_MOCK=1`) never touches the network, so importing
+    this module must not require the dependency. Only the real ``ZapClient``
+    path needs it.
+    """
+    try:
+        import requests
+    except ImportError as exc:  # pragma: no cover - real ZAP path only
+        raise RuntimeError(
+            "The real ZapClient requires the 'requests' package "
+            "(pip install requests). Mock mode does not need it."
+        ) from exc
+    return requests
 
 
 MOCK_FINDINGS = [
@@ -87,6 +102,7 @@ class ZapClient:
         self.api_key = api_key
 
     def _get(self, path: str, params: dict | None = None):
+        requests = _requests()
         params = dict(params or {})
         if self.api_key:
             params["apikey"] = self.api_key

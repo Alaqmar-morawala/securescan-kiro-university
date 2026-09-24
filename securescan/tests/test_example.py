@@ -1,4 +1,4 @@
-"""Example tests: auth, targets, estimate, mock scan run, PDF, history isolation."""
+"""Example tests: auth, targets, estimate, scan run, PDF, history."""
 
 import pytest
 from django.contrib.auth.models import User
@@ -21,21 +21,37 @@ def client_user(client: Client, user):
 
 
 def test_register_and_login(client: Client, db):
-    r = client.post("/accounts/register/", {"username": "u1", "password1": "StrongPass!234", "password2": "StrongPass!234"})
+    r = client.post(
+        "/accounts/register/",
+        {
+            "username": "u1",
+            "password1": "StrongPass!234",
+            "password2": "StrongPass!234",
+        },
+    )
     assert r.status_code in (200, 302)
     assert client.login(username="u1", password="StrongPass!234")
 
 
 def test_add_target_validation(client_user: Client):
-    r = client_user.post("/targets/add/", {"name": "t", "url": "ftp://bad.example/x"})
+    r = client_user.post(
+        "/targets/add/", {"name": "t", "url": "ftp://bad.example/x"}
+    )
     assert r.status_code == 200  # form error, not redirect
-    r = client_user.post("/targets/add/", {"name": "demo", "url": "https://example.com"})
+    r = client_user.post(
+        "/targets/add/", {"name": "demo", "url": "https://example.com"}
+    )
     assert r.status_code == 302
 
 
 def test_configure_and_estimate(client_user: Client, user):
-    t = Target.objects.create(owner=user, name="demo", url="https://example.com")
-    r = client_user.post(f"/targets/{t.pk}/configure/", {"scan_type": "full", "spider_depth": 3, "max_pages": 100})
+    t = Target.objects.create(
+        owner=user, name="demo", url="https://example.com"
+    )
+    r = client_user.post(
+        f"/targets/{t.pk}/configure/",
+        {"scan_type": "full", "spider_depth": 3, "max_pages": 100},
+    )
     assert r.status_code == 302
     scan = Scan.objects.filter(owner=user).latest("created_at")
     cost, dur = estimate_cost(100, 3, "full")
@@ -43,8 +59,12 @@ def test_configure_and_estimate(client_user: Client, user):
 
 
 def test_mock_scan_run_and_pdf(client_user: Client, user):
-    t = Target.objects.create(owner=user, name="demo", url="https://example.com")
-    cfg = ScanConfig.objects.create(target=t, scan_type="full", spider_depth=2, max_pages=20)
+    t = Target.objects.create(
+        owner=user, name="demo", url="https://example.com"
+    )
+    cfg = ScanConfig.objects.create(
+        target=t, scan_type="full", spider_depth=2, max_pages=20
+    )
     scan = Scan.objects.create(owner=user, target=t, config=cfg)
     run_scan(scan)
     scan.refresh_from_db()

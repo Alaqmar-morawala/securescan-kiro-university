@@ -1,4 +1,4 @@
-"""Property P2: severity ordering High > Medium > Low > Info preserved in reports."""
+"""Property P2: severity ordering High > Medium > Low > Info in reports."""
 
 from hypothesis import given, settings
 from hypothesis import strategies as st

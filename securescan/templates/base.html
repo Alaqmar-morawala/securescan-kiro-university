@@ -19,6 +19,7 @@
       </span>
       <span class="brand-name">SecureScan</span>
       <span class="brand-tag">OWASP ZAP &middot; Docker isolation</span>
+      {% if scan_engine %}<span class="engine-chip engine-{{ scan_engine.mode }}" title="{{ scan_engine.reason }}">{{ scan_engine.label }}</span>{% endif %}
     </a>
     <nav class="topnav" aria-label="Primary">
       {% if user.is_authenticated %}
@@ -37,7 +38,7 @@
 </main>
 <footer class="footer">
   <div class="wrap footer-inner">
-    <span>SecureScan &mdash; scan apps you own. Mock mode runs fully offline for judges.</span>
+    <span>SecureScan &mdash; scan apps you own. {% if scan_engine and scan_engine.mode == 'real' %}Live OWASP ZAP engine connected.{% else %}Demo fixtures active &mdash; start ZAP for live scans.{% endif %}</span>
     <span class="dot" aria-hidden="true">&middot;</span>
     <span>Severity order: High &gt; Medium &gt; Low &gt; Info</span>
   </div>

@@ -3,6 +3,8 @@
 from django import forms
 from django.core.validators import URLValidator
 
+from .crypto import encrypt_secret
+from .guards import TargetNotAllowed, validate_scan_target
 from .models import ScanConfig, Target
 
 
@@ -18,7 +20,17 @@ class TargetForm(forms.ModelForm):
             raise forms.ValidationError(
                 "URL must start with http:// or https://"
             )
+        # Static SSRF check only (no DNS at form time); the scan runner
+        # re-validates with full resolution before fetching anything.
+        try:
+            url = validate_scan_target(url, resolve=False)
+        except TargetNotAllowed as exc:
+            raise forms.ValidationError(str(exc))
         return url
+
+    def clean_secret_header_value(self):
+        value = self.cleaned_data["secret_header_value"]
+        return encrypt_secret(value) if value else ""
 
 
 class ScanConfigForm(forms.ModelForm):

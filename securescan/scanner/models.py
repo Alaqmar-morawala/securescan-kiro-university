@@ -3,6 +3,8 @@
 from django.conf import settings
 from django.db import models
 
+from .crypto import decrypt_secret, is_encrypted, mask_secret
+
 
 class Target(models.Model):
     owner = models.ForeignKey(
@@ -14,8 +16,11 @@ class Target(models.Model):
     secret_header_name = models.CharField(
         max_length=120, blank=True, default=""
     )
+    # Stores ``enc1:<fernet token>`` ciphertext (see scanner.crypto); legacy
+    # rows may hold plaintext until the next form save re-encrypts them.
+    # 768 chars = ciphertext headroom for a 500-char plaintext value.
     secret_header_value = models.CharField(
-        max_length=500, blank=True, default=""
+        max_length=768, blank=True, default=""
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -24,6 +29,23 @@ class Target(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name} ({self.url})"
+
+    @property
+    def secret_header_value_plain(self) -> str:
+        return decrypt_secret(self.secret_header_value)
+
+    @property
+    def has_secret_header(self) -> bool:
+        return bool(self.secret_header_name and self.secret_header_value)
+
+    @property
+    def secret_header_masked(self) -> str:
+        """``••••last4`` preview; safe to render."""
+        if not self.secret_header_value:
+            return ""
+        if not is_encrypted(self.secret_header_value):
+            return mask_secret(self.secret_header_value)
+        return mask_secret(self.secret_header_value)
 
 
 class ScanConfig(models.Model):

@@ -125,3 +125,9 @@ table.data tr:hover td { background: rgba(109, 124, 255, 0.06); }
   .topbar-inner { flex-direction: column; align-items: stretch; }
   .topnav { justify-content: flex-start; flex-wrap: wrap; }
 }
+
+/* Engine status chip (context processor scan_engine). */
+.engine-chip { font-size: 11px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.engine-chip.engine-real { color: #34d399; border-color: rgba(52, 211, 153, 0.45); }
+.engine-chip.engine-mock { color: #fbbf24; border-color: rgba(251, 191, 36, 0.45); }
+.pager { display: flex; gap: 12px; align-items: center; margin-top: 14px; }

@@ -7,5 +7,12 @@
     <tr><th>#</th><th>Target</th><th>Type</th><th>Status</th><th>Cost</th><th>Created</th></tr>
     {% for s in scans %}<tr><td><a href="/scans/{{ s.pk }}/">#{{ s.pk }}</a></td><td>{{ s.target.name }}</td><td>{{ s.config.scan_type }}</td><td><span class="status-chip status-{{ s.status|lower }}">{{ s.status }}</span></td><td>${{ s.cost_estimate }}</td><td class="small muted">{{ s.created_at }}</td></tr>{% empty %}<tr><td colspan="6" class="empty">No scans.</td></tr>{% endfor %}
   </table></div>
+  {% if page_obj and page_obj.has_other_pages %}
+  <nav class="pager" aria-label="History pages">
+    {% if page_obj.has_previous %}<a class="btn subtle sm" href="?page={{ page_obj.previous_page_number }}">&larr; Newer</a>{% endif %}
+    <span class="muted small">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a class="btn subtle sm" href="?page={{ page_obj.next_page_number }}">Older &rarr;</a>{% endif %}
+  </nav>
+  {% endif %}
 </section>
 {% endblock %}

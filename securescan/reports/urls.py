@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import ReportHtmlView, ReportPdfView
+from .views import ReportCsvView, ReportHtmlView, ReportPdfView
 
 app_name = "reports"
 
@@ -14,5 +14,10 @@ urlpatterns = [
         "scans/<int:pk>/report.pdf",
         ReportPdfView.as_view(),
         name="report_pdf",
+    ),
+    path(
+        "scans/<int:pk>/report.csv",
+        ReportCsvView.as_view(),
+        name="report_csv",
     ),
 ]

@@ -35,6 +35,7 @@ Optional env vars (Vercel dashboard -> Settings -> Environment Variables):
 | `DEBUG` | `false` (default on Vercel). `true` only for debugging a preview. |
 | `DATABASE_URL` | Postgres DSN; needs a driver (`psycopg[binary]`) added to `requirements.txt`. |
 | `ALLOWED_HOSTS` / `CSRF_TRUSTED_ORIGINS` | Comma-separated extras for a custom domain. |
+| `SECURESCAN_MOCK` | `1` (default on Vercel) keeps the deterministic demo engine; real ZAP is not possible serverless. |
 
 ## Deploy from the dashboard
 
@@ -59,9 +60,11 @@ runs `migrate`), subsequent requests are warm.
 
 - **Ephemeral data**: each cold start gives a fresh `/tmp` DB, so demo accounts
   and scans reset. Add `DATABASE_URL` (Postgres/Neon) for persistence.
-- **Real ZAP/Docker path is disabled**: serverless has no Docker daemon. The
-  real path lives in `scanner/docker_runner.py` and raises unless
-  `SECURESCAN_MOCK` is turned off on a Docker-capable host.
+- **Serverless stays in demo-fixture mode**: no ZAP daemon or Docker daemon
+  exists on a lambda, so the real engine would fail there. Keep
+  `SECURESCAN_MOCK=1` on Vercel; the real engine runs on a normal host
+  (`SECURESCAN_MOCK=0` or `auto` + `SECURESCAN_ZAP_AUTOSTART=1`) — see the
+  "Real scan engine" section in `README.md`.
 - **`check --deploy` warnings W005/W021** are intentional: HSTS
   `includeSubDomains`/`preload` are skipped because `*.vercel.app` is a shared
   domain.

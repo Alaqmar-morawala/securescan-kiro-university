@@ -3,6 +3,8 @@
 Django>=5.0,<6.0
 reportlab>=4.0
 whitenoise>=6.6
-# Only needed by the real ZAP path (scanner/zap_client.py::ZapClient);
+# Secret-at-rest encryption for Target.secret_header_value (scanner/crypto.py).
+cryptography>=42.0
+# Only needed by the real ZAP engine (scanner/zap_client.py::RealZapClient);
 # imported lazily so mock mode runs without it.
 requests>=2.31

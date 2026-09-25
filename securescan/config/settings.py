@@ -100,6 +100,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'scanner.context_processors.scan_engine',
             ],
         },
     },
@@ -216,7 +217,48 @@ LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 
-SECURESCAN_MOCK = True  # demo/test mode: no Docker or network required
+# ---------------------------------------------------------------------
+# SecureScan scan-engine selection
+# ---------------------------------------------------------------------
+# SECURESCAN_MOCK controls which engine executes scans:
+#   '1'/'true'   -> deterministic mock fixtures (offline demo; no network)
+#   '0'/'false'  -> real OWASP ZAP engine (scan FAILS if ZAP unreachable)
+#   unset/'auto' -> real ZAP when a daemon is reachable, else mock fallback
+#                   (the fallback reason is surfaced in the UI engine chip)
+_mock_env = os.environ.get('SECURESCAN_MOCK', 'auto').strip().lower()
+if _mock_env in ('1', 'true', 'yes', 'on'):
+    SECURESCAN_MOCK = True
+elif _mock_env in ('0', 'false', 'no', 'off'):
+    SECURESCAN_MOCK = False
+else:
+    SECURESCAN_MOCK = None  # 'auto' — resolved per scan by scanner.engine
+
+# Real ZAP daemon connection (scanner/zap_process.py, scanner/engine.py).
+SECURESCAN_ZAP_HOST = os.environ.get('SECURESCAN_ZAP_HOST', '127.0.0.1')
+SECURESCAN_ZAP_PORT = int(os.environ.get('SECURESCAN_ZAP_PORT', '8090'))
+# Empty = daemon expected to run with api.disablekey=true (local-only daemon).
+SECURESCAN_ZAP_API_KEY = os.environ.get('SECURESCAN_ZAP_API_KEY', '')
+# May run_scan launch a local zaproxy daemon itself? The daemon is reused
+# across scans (see scanner/zap_process.py).
+SECURESCAN_ZAP_AUTOSTART = os.environ.get(
+    'SECURESCAN_ZAP_AUTOSTART', 'false'
+).lower() in ('1', 'true', 'yes', 'on')
+# 'local' reuses/starts the zaproxy binary on this host; 'docker' runs ZAP in
+# a per-scan container (requires a docker daemon).
+SECURESCAN_ZAP_LAUNCHER = os.environ.get('SECURESCAN_ZAP_LAUNCHER', 'local')
+# Boot/poll budgets for the real engine (seconds).
+SECURESCAN_ZAP_BOOT_TIMEOUT_S = int(
+    os.environ.get('SECURESCAN_ZAP_BOOT_TIMEOUT_S', '240')
+)
+SECURESCAN_ZAP_SCAN_BUDGET_S = int(
+    os.environ.get('SECURESCAN_ZAP_SCAN_BUDGET_S', '1800')
+)
+# Disables the private-network part of the scan-target guard so the bundled
+# vulnerable demo target (manage.py vuln_target) and local test apps can be
+# scanned. Local development ONLY — never enable on a shared host.
+SECURESCAN_ALLOW_PRIVATE_TARGETS = os.environ.get(
+    'SECURESCAN_ALLOW_PRIVATE_TARGETS', ''
+).lower() in ('1', 'true', 'yes', 'on')
 
 if not DEBUG:
     # Vercel terminates TLS at the edge and forwards this header.

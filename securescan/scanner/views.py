@@ -1,5 +1,7 @@
 """Scanner views: targets, configs, scan run, progress, detail, history."""
 
+import threading
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -7,6 +9,7 @@ from django.views import View
 from django.views.generic import DetailView, ListView
 
 from .docker_runner import run_scan, seed_estimate
+from .engine import resolve_engine
 from .forms import ScanConfigForm, TargetForm
 from .models import Scan, Target
 from .services import estimate_cost, order_findings
@@ -67,8 +70,20 @@ class ScanConfigView(LoginRequiredMixin, View):
 class ScanStartView(LoginRequiredMixin, View):
     def post(self, request, pk):
         scan = get_object_or_404(Scan, pk=pk, owner=request.user)
+        if scan.status == "RUNNING":
+            return redirect("scanner:scan_detail", pk=scan.pk)
         seed_estimate(scan)
-        run_scan(scan)
+        if resolve_engine().is_real:
+            # Real ZAP scans take minutes: run in the background so the
+            # detail page can stream progress via the polling hook.
+            threading.Thread(
+                target=run_scan,
+                args=(scan,),
+                name=f"securescan-{scan.pk}",
+                daemon=True,
+            ).start()
+        else:
+            run_scan(scan)
         return redirect("scanner:scan_detail", pk=scan.pk)
 
 
@@ -110,6 +125,7 @@ class ScanHistoryView(LoginRequiredMixin, ListView):
     model = Scan
     template_name = "scanner/history.html"
     context_object_name = "scans"
+    paginate_by = 10
 
     def get_queryset(self):
         return (

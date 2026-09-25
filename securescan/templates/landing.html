@@ -4,14 +4,14 @@
 <section class="hero">
   <span class="eyebrow">Django &middot; OWASP ZAP &middot; Docker isolation</span>
   <h1>Ship web apps your scanners can't embarrass.</h1>
-  <p class="lead">SecureScan runs isolated OWASP ZAP scans in per-scan Docker containers, estimates cost up front, then hands you severity-ordered HTML &amp; PDF reports. Judges run fully offline in mock mode.</p>
+  <p class="lead">SecureScan drives a real OWASP ZAP engine against the apps you own, estimates cost up front, then hands you severity-ordered HTML, PDF &amp; CSV reports. With no ZAP daemon running it falls back to deterministic demo fixtures &mdash; fully offline.</p>
   <div class="hero-actions">
     <a class="btn solid" href="/accounts/register/">Start scanning &rarr;</a>
     <a class="btn ghost" href="/accounts/login/">Login</a>
   </div>
   <div class="hero-stats" aria-label="What you get">
-    <div class="stat"><b>5 findings</b><span>deterministic mock set, High&rarr;Info</span></div>
-    <div class="stat"><b>&lt;30s</b><span>report generation SLA</span></div>
+    <div class="stat"><b>OWASP ZAP</b><span>live engine + offline demo fixtures</span></div>
+    <div class="stat"><b>HTML &middot; PDF &middot; CSV</b><span>severity-ordered exports</span></div>
     <div class="stat"><b>100%</b><span>owner-isolated history</span></div>
   </div>
 </section>
@@ -27,7 +27,7 @@
   </div>
   <div class="card">
     <h3>Why judges love it</h3>
-    <p class="muted">Everything is deterministic offline: same target, same findings, same order. `SECURESCAN_MOCK=True` means no Docker, no network, no flakiness.</p>
+    <p class="muted">Real scans when a ZAP daemon is reachable; deterministic fixtures (SECURESCAN_MOCK) keep offline demos flake-free. An SSRF guard blocks internal and non-public targets on every scan.</p>
     <p class="small mono">register &rarr; add &rarr; configure &rarr; start &rarr; report &rarr; history</p>
     <a class="btn subtle" href="/accounts/register/">Try the flow</a>
   </div>

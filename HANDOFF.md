@@ -8,9 +8,11 @@
 
 - **Goal:** Win Kiro University Challenge 2026 Final Exam credits with the
   SecureScan Django app (also the owner's Parul University SE-lab project).
-- **Status (2026-09-23): BUILD COMPLETE, SUBMISSION PENDING.**
-  App works end-to-end, 16/16 tests pass, repo public + pushed, real 2m15s demo
-  video public. Two human-only actions remain (social post + entry form).
+- **Status (2026-09-25): BUILD COMPLETE + REAL ENGINE, SUBMISSION PENDING.**
+  App works end-to-end, 65/65 offline tests pass (+ opt-in live ZAP test), repo
+  public + pushed, real 2m15s demo video public. The OWASP ZAP path is now real
+  (§10): full client, daemon lifecycle, SSRF guard, evidence in `demo/real-scan/`.
+  Two human-only actions remain (social post + entry form).
 - **Expected award on free plan: 5,000 credits**
   (7 lessons + completion + Bonus 2; Bonus 1 cloud is paid-only, not claimed).
 
@@ -70,7 +72,8 @@
 
 ```bash
 cd /home/alaqmar/pentest001/challenge/securescan
-python3 -m pytest tests/ -q -p no:cacheprovider   # expect: 16 passed
+python3 -m pytest tests/ -q -p no:cacheprovider   # expect: 65 passed, 1 skipped
+RUN_ZAP_E2E=1 python3 -m pytest tests/test_real_zap_integration.py -q  # optional: real ZAP scan (needs zaproxy)
 python3 manage.py check                            # expect: no issues
 python3 manage.py migrate && python3 manage.py runserver 127.0.0.1:8472
 # register → /targets/add/ (https://example.com) → configure (full, depth 3,
@@ -122,8 +125,12 @@ rm -f db.sqlite3   # IMPORTANT: never commit db.sqlite3 (gitignored)
   `order_findings()` + report builder — don't touch without checking P2 tests.
 - Real-Docker path in `docker_runner` intentionally errors when unconfigured; mock
   path is the judged path. Keep `SECURESCAN_MOCK=True`.
+  (UPDATED 2026-09-25: the real path is now fully implemented — see §10. Mock
+  remains the Vercel/judged mode; tests force mock in `tests/conftest.py`, which
+  also must run AFTER pytest-django imports settings — keep that ordering.)
 - `securescan/README.md` references `docs/SPRINTS.md` + `docs/SPMP.md` for the uni
-  mapping — **never created**; create them or fix the README before lab submission.
+  mapping — both exist since commit 5207025 (older copies of this note said
+  "never created"; that was stale).
 - Demo screenshots rendered from saved HTML via `file://` (Bootstrap CDN unstyled
   offline) — evidence only; re-record properly if needed.
 
@@ -144,3 +151,43 @@ rm -f db.sqlite3   # IMPORTANT: never commit db.sqlite3 (gitignored)
   parul email maps to the `saif-pvt` GitHub account (second account, disallowed).
   Local git config now uses the noreply address; NEVER reintroduce the parul email.
 
+
+## 10. Real ZAP engine upgrade (2026-09-25, pre-freeze)
+
+The app previously shipped fabricated findings only (`MockZapClient`); the
+"real" client was a stub that raised. It is now real:
+
+- `scanner/zap_client.py` — `RealZapClient`: ZAP session reset, spider
+  (depth + page budget), passive-scan drain (pscan endpoint on ZAP ≥2.17,
+  core fallback), active scan, paginated alerts, urllib3 Retry adapter,
+  scan budget/deadline, progress callbacks. Severity mapping handles BOTH
+  ZAP risk formats (numeric codes and 2.17+ string names) — this bit us
+  once: real ZAP 2.17 returns "High"/"Medium"/... not 0-3.
+- `scanner/zap_process.py` + `manage.py zap up|status|stop` — local daemon
+  autostart/reuse (pidfile-tracked, /tmp logs), loopback + keyless by default.
+- `scanner/engine.py` — engine selection: `SECURESCAN_MOCK=1|0|auto`;
+  auto uses real ZAP when reachable else demo fixtures; powers the header
+  engine chip (context processor + CSS). Real runs execute in a background
+  thread so the existing progress-polling UI streams live progress.
+- `scanner/guards.py` — SSRF guard (blocks loopback/RFC1918/link-local/
+  metadata/non-global literals + `.local/.internal`; DNS resolution at scan
+  time). `SECURESCAN_ALLOW_PRIVATE_TARGETS=1` for local demos only.
+- `scanner/crypto.py` — Fernet encryption at rest for
+  `Target.secret_header_value` (enc1: prefix, legacy plaintext passthrough);
+  optional auth-header injection into scans via ZAP Replacer.
+- Task-11 backlog closed: admin registration, CSV export, PDF executive
+  summary, history pagination, estimate edge PBT, secret-header tests.
+- `manage.py vuln_target` — bundled deliberately-vulnerable demo app
+  (reflected/DOM XSS, error-based SQLi signature, missing headers, insecure
+  cookie, verbose banner) so real scans have something true to find.
+- Tests: `tests/fake_zap.py` (in-process fake ZAP API), new suites
+  (65 offline total), `RUN_ZAP_E2E=1 tests/test_real_zap_integration.py`
+  performs a REAL daemon-backed scan.
+- Evidence: `demo/real-scan/{report.pdf,report.csv,findings.txt}` — a real
+  full-stack `run_scan` run (SECURESCAN_MOCK=0) against the vulnerable
+  target: High XSS (reflected+DOM, CWE-79), High SQLi (CWE-89), Medium CSP/
+  clickjacking, Low cookie/banner/XCTO.
+
+Reproduce the real-scan demo: `python3 manage.py zap up`, then
+`python3 demo_real_scan.py` (forces SECURESCAN_MOCK=0, runs the vulnerable
+target + a full scan, writes demo/real-scan/).

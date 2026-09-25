@@ -1,17 +1,53 @@
 # SecureScan — Web Application Security Scanner (SaaS)
 
 **Kiro University Challenge 2026 — Final Exam submission.**
-Built with Kiro (CLI) as the primary development tool. Django + OWASP ZAP
-(mock mode for demo; real Docker+ZAP path included) + severity-ordered HTML/PDF reports.
+Built with Kiro (CLI) as the primary development tool. Django + a real
+OWASP ZAP engine (deterministic demo fixtures as offline fallback) +
+severity-ordered HTML/PDF/CSV reports.
 
 ## Quickstart
 ```bash
 python3 manage.py migrate
 python3 manage.py runserver
-# register -> Add website -> Configure scan -> Start scan -> HTML/PDF report
+# register -> Add website -> Configure scan -> Start scan -> HTML/PDF/CSV report
 ```
-Mock mode (`SECURESCAN_MOCK=True` in `config/settings.py`) runs fully offline
-with deterministic findings — no Docker or network needed for judges.
+Without a ZAP daemon the app auto-falls back to deterministic demo fixtures
+(fully offline — no Docker or network needed for judges); the active engine
+is shown in the header chip.
+
+## Real scan engine (live OWASP ZAP)
+
+The real path is fully implemented — session isolation, spider with
+depth/page budget, passive-scan drain, active scan, paginated alert
+collection, retries, and an optional authenticated-scan header (ZAP
+Replacer). Evidence from an actual run: `../demo/real-scan/`.
+
+```bash
+python3 manage.py zap up          # start (or reuse) a local ZAP daemon
+python3 manage.py vuln_target     # bundled deliberately-vulnerable demo app
+# in another shell:
+SECURESCAN_MOCK=0 SECURESCAN_ALLOW_PRIVATE_TARGETS=1 python3 manage.py runserver
+```
+
+Engine selection (`SECURESCAN_MOCK`): `1` force demo fixtures, `0` force
+real ZAP (scan fails if the daemon is unreachable), unset/`auto` (default)
+uses real ZAP when reachable and falls back otherwise. Real scans run in a
+background thread; the detail page streams progress via polling.
+
+| Env var | Default | Purpose |
+|---|---|---|
+| `SECURESCAN_MOCK` | `auto` | Engine selection (see above) |
+| `SECURESCAN_ZAP_HOST` / `SECURESCAN_ZAP_PORT` | `127.0.0.1:8090` | Daemon address |
+| `SECURESCAN_ZAP_API_KEY` | empty | ZAP API key (daemon runs keyless+loopback by default) |
+| `SECURESCAN_ZAP_AUTOSTART` | `false` | Let `run_scan` launch/reuse a local daemon |
+| `SECURESCAN_ZAP_LAUNCHER` | `local` | `local` binary or `docker` per-scan container |
+| `SECURESCAN_ALLOW_PRIVATE_TARGETS` | off | Allow loopback/RFC1918 targets (local demos ONLY) |
+
+The SSRF guard (`scanner/guards.py`) blocks non-public targets (loopback,
+RFC1918, link-local incl. cloud metadata, `.local`/`.internal` names) on
+every real scan. Secret header values are encrypted at rest (Fernet).
+Tests: `RUN_ZAP_E2E=1 pytest tests/test_real_zap_integration.py` performs a
+real daemon-backed scan of the bundled vulnerable target.
 
 ## Kiro lessons demonstrated (evidence map)
 | Lesson | Where to look |
@@ -33,9 +69,10 @@ with deterministic findings — no Docker or network needed for judges.
 ## Demo video script (60–90s)
 1. Landing → register/login (auth).
 2. Add `https://example.com` → configure (full, depth 3) → show cost/duration estimate.
-3. Start scan → progress JSON → DONE with 5 severity-ordered findings.
-4. Open HTML report → Download PDF.
+3. Start scan → progress JSON → DONE with severity-ordered findings.
+4. Open HTML report → Download PDF / CSV.
 5. History page. Then flash `.kiro/` tree: specs, steering, hooks, agents, settings/mcp.json + `powers/secscan-django/`.
+6. (Optional, if ZAP is running) same flow against `manage.py vuln_target` with real findings.
 
 ## University project mapping (Parul SE lab)
 Practical 1 (objectives/requirements) → `.kiro/specs/securescan/requirements.md`;

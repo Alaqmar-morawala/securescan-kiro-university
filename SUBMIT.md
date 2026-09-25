@@ -30,23 +30,52 @@
 3. **Commit freeze**: NO commits to the repo after Oct 5 23:59 PT until judging ends
    (Oct 19) or you get the award email — else disqualification risk.
 
-## Lesson writeup (paste into form)
-> Context line you can prepend: "SecureScan is a Django SaaS that runs real
-> OWASP ZAP scans (with a deterministic offline demo mode), 65 offline tests,
-> and ships its full .kiro evidence in the repo. Demo video shows a live ZAP
-> scan finding real High-severity XSS + SQLi."
-- L1 Specs (250): `.kiro/specs/securescan/` — EARS requirements, design, 14-task list with completion state.
-- L2 Steering (250): `.kiro/steering/` product/tech/testing with inclusion modes.
-- L3 Hooks (250): `.kiro/hooks/python-checks.json` — PostFileSave compile check + pytest smoke (both still pass on the current tree).
-- L4 PBT IDE-only (500): `tests/test_properties_{cost,report,history}.py` — hypothesis, 100–200 examples per property, including edge-input clamping PBT over the estimator and ordering invariants over the real report/severity pipeline.
-- L5 Powers (500): `powers/secscan-django/` installed + used via secscan/zap keywords.
-- L6 MCP (1000): `.kiro/settings/mcp.json` fetch + power `mcp.json`.
-- L7 Custom agents (1000): `.kiro/agents/` reviewer + zap-operator.
-- Bonus 2 create-a-power (250): `powers/secscan-django/` original power.
-- Bonus 1 cloud (250, paid only): NOT claimed, free plan — see `securescan/CLOUD.md`.
-- Expected total: **5,000 credits** (5,250 with paid cloud).
+## Lesson writeup (paste into form — judge-facing, full text)
 
-## Evidence quick-paths for reviewers
+> Context sentence you can prepend: "SecureScan is a Django SaaS that runs real
+> OWASP ZAP scans (with a deterministic offline demo mode); 65 offline tests;
+> the full .kiro evidence ships in the repo and the demo video shows a live
+> scan finding real High-severity XSS + SQLi."
+
+1. Spec-driven development — SecureScan was built spec-first in Kiro:
+   `.kiro/specs/securescan/requirements.md` (EARS-style requirements),
+   `design.md` (architecture decisions: Django apps, engine selection, report
+   pipeline) and `tasks.md` (14-task list with per-task completion state).
+   The build followed the task list top-to-bottom — each implementation phase
+   is a commit referencing the spec work.
+2. Steering documents — `.kiro/steering/` with inclusion frontmatter:
+   `product.md` (mission, users, non-goals), `tech.md` (Django 5/SQLite/
+   reportlab stack + conventions), `testing.md` (offline-deterministic test
+   policy). Kiro loaded these as persistent context on every session.
+3. Hooks — `.kiro/hooks/python-checks.json` defines two PostFileSave hooks:
+   a `python -m compileall` syntax check on every saved .py file, and a
+   `python -m pytest tests/test_smoke.py` smoke test whenever
+   `scanner/services.py` changes. Both commands run clean on the current tree.
+4. Property-based testing (IDE only) — `tests/test_properties_cost.py`,
+   `test_properties_history.py`, `test_properties_report.py`: hypothesis
+   properties with 100–200 generated examples each — estimator monotonicity
+   and edge clamping (negative/oversized inputs), severity ordering invariant
+   (High>Medium>Low>Info), history newest-first + owner isolation. Authored
+   and run through Kiro; the offline suite is 65 tests, all green.
+5. Powers — `powers/secscan-django/` is an in-repo Kiro power (plugin.json +
+   skills/scan-patterns/SKILL.md + severity reference + mcp.json) that was
+   installed into Kiro and invoked via secscan/zap/owasp keywords during the
+   build; it encodes the project's scan-pattern and severity conventions.
+6. Model Context Protocol (MCP) — `.kiro/settings/mcp.json` configures the
+   fetch MCP server used during the build; the power bundles its own MCP
+   config (`powers/secscan-django/mcp.json`, secscan-fetch). Used to pull
+   OWASP/ZAP documentation while building the real engine.
+7. Custom agents — `.kiro/agents/securescan-reviewer.json` (security-review
+   policy: ownership checks on every view, never scan hosts you don't own,
+   secret hygiene) and `zap-operator.json` (ZAP daemon lifecycle rules). The
+   SSRF guard (`scanner/guards.py`) and encrypted secrets
+   (`scanner/crypto.py`) implement these agent policies in code.
+
+[Bonus] Kiro Web/cloud: not claimed — built entirely on the Kiro CLI free plan
+(see `securescan/CLOUD.md`). Bonus power: same `powers/secscan-django/`
+plugin.json (URL in the evidence quick-paths below).
+
+## Evidence quick-paths for reviewers## Evidence quick-paths for reviewers
 - Real scan (product works): `demo/real-scan/` — PDF/CSV + findings list from a
   full-stack `run_scan` run (SECURESCAN_MOCK=0) against the bundled vulnerable
   app; video shows the same flow live.

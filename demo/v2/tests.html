@@ -1,3 +1,4 @@
+<!-- backdrop for the demo-video test segment; mirrors a real suite run -->
 <!doctype html><html><head><meta charset="utf-8"><title>SecureScan test run</title></head>
 <body style="margin:0;background:#0b1020;color:#d6e2ff;font:16px/1.55 'JetBrains Mono',Consolas,monospace">
 <div style="padding:26px 34px">
@@ -8,7 +9,8 @@ tests/test_example.py::test_register_and_login
   /usr/lib/python3/dist-packages/django/db/models/fields/__init__.py:1148: RemovedInDjango60Warning: The default scheme will be changed from 'http' to 'https' in Django 6.0. Pass the forms.URLField.assume_scheme argument to silence this warning, or set the FORMS_URLFIELD_ASSUME_HTTPS transitional setting to True to opt into using 'https' as the new default scheme.
     return form_class(**defaults)
 
--- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-16 passed, 1 warning in ~42s</pre>
-<div style="margin-top:20px;color:#22c55e;font-weight:700">16 passed &#10004;  &nbsp;<span style="color:#8b9cc0;font-weight:400">5 example + 5 frontier E2E + 1 smoke + 5 property-based (hypothesis, 100+ examples each)</span></div>
+-- Docs: https://docs.pytest.org/en/stable/how-to/warnings.html
+65 passed, 1 skipped, 1 warning in 54.88s</pre>
+<div style="margin-top:20px;color:#22c55e;font-weight:700">65 passed &#10004;  &nbsp;<span style="color:#8b9cc0;font-weight:400">example + frontier E2E + smoke + property-based (hypothesis, 100+ examples) + real-ZAP client suites</span></div>
+<div style="margin-top:10px;color:#8b9cc0;font-size:14px">1 skipped = opt-in live integration test: RUN_ZAP_E2E=1 pytest tests/test_real_zap_integration.py &#8594; real OWASP ZAP scan of the bundled vulnerable app (passes: findings High XSS + SQLi)</div>
 </div></body></html>

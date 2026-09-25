@@ -1,6 +1,16 @@
 
-DevTools listening on ws://127.0.0.1:9222/devtools/browser/69b13380-ca97-4f38-a9f3-e80d5885482f
-[1352141:1352174:0923/005313.947035:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
-[1352141:1352174:0923/005343.384139:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
-[1352141:1352174:0923/005438.754755:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
-[1352141:1352141:0923/005538.755152:ERROR:content/common/zygote/zygote_communication_linux.cc:291] Failed to send GetTerminationStatus message to zygote
+DevTools listening on ws://127.0.0.1:9222/devtools/browser/32b4b9a2-9a08-4bd8-a005-7463199f2e1c
+[1521043:1521076:0925/113928.533467:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[1521043:1521076:0925/113954.205328:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[1521096:1521105:0925/114002.041836:ERROR:components/viz/service/display/display.cc:273] Frame latency is negative: -0.324 ms
+[1521043:1521076:0925/114048.462019:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[1521043:1521076:0925/114222.907611:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+Warning: loader_scanned_icd_add: Could not get 'vkCreateInstance' via 'vk_icdGetInstanceProcAddr' for ICD libGLX_nvidia.so.0
+Warning: loader_icd_scan: Failed loading library associated with ICD JSON libGLX_nvidia.so.0. Ignoring this JSON
+Warning: maxDynamicUniformBuffersPerPipelineLayout artificially reduced from 500000 to 16 to fit dynamic offset allocation limit.
+Warning: maxDynamicStorageBuffersPerPipelineLayout artificially reduced from 500000 to 16 to fit dynamic offset allocation limit.
+[1529256:1529256:0925/114226.836175:ERROR:services/on_device_model/ml/gpu_blocklist.cc:117] Unable to get gpu adapter
+[1529256:1529301:0925/114226.837972:ERROR:services/on_device_model/ml/gpu_blocklist.cc:117] Unable to get gpu adapter
+[1521043:1521043:0925/114348.895460:ERROR:content/common/zygote/zygote_communication_linux.cc:291] Failed to send GetTerminationStatus message to zygote
+[1521043:1521043:0925/114348.895860:ERROR:content/common/zygote/zygote_communication_linux.cc:291] Failed to send GetTerminationStatus message to zygote
+[1521043:1521076:0925/114348.896463:ERROR:google_apis/gcm/engine/connection_factory_impl.cc:484] ConnectionHandler failed with net error: -2

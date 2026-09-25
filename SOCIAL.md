@@ -29,28 +29,29 @@ reading of the truncated clause.
 
 ---
 
-## Option A — X / Twitter ✅ fits 280 (255 by X's weighted counting)
+## Option A — X / Twitter ✅ fits 280 (275 by X's URL weighting, URLs = 23)
 
 ```
-SecureScan: a Django OWASP ZAP scanner with cost estimates and severity-ordered HTML/PDF reports. Built spec-first with Kiro; the demo uses reproducible mock mode.
+SecureScan: real OWASP ZAP scans (spider + active) on apps you own, with cost estimates and severity-ordered HTML/PDF/CSV reports — plus offline demo mode. Built spec-first with Kiro.
 
 #KiroUniversity #BuildWithKiro @kirodotdev
 https://github.com/Alaqmar-morawala/securescan-kiro-university
-https://github.com/Alaqmar-morawala/securescan-kiro-university/releases/download/final-demo/securescan-demo-real.mp4
+https://github.com/Alaqmar-morawala/securescan-kiro-university/releases/download/final-demo/securescan-demo-real-engine.mp4
 ```
 
-**Verified:** 255 characters by X's URL weighting (each URL counts as 23),
-387 raw characters. Both the repository and video return HTTP 200.
+**Verified:** 275 characters by X's URL weighting (each URL counts as 23),
+414 raw characters. Both links return HTTP 200. Updated 2026-09-25 for the
+real-engine build (replaces the mock-mode copy).
 
 ## Option B — LinkedIn ✅
 
 ```
-I built SecureScan, a Django web-security scanner for the Kiro University Challenge that provides OWASP ZAP integration, per-target cost estimates, and severity-ordered HTML/PDF reports, with isolated execution designed around one Docker container per scan. The public demo uses reproducible mock mode, so the full workflow runs offline without Docker or network access.
+I built SecureScan, a Django web-security scanner for the Kiro University Challenge that runs real OWASP ZAP scans — spider, passive and active rules — against the apps you own, with per-scan cost estimates, an SSRF guard that blocks internal targets, and severity-ordered HTML, PDF and CSV reports. With no ZAP daemon running it falls back to a deterministic offline demo mode, so the whole workflow still runs without network access.
 
-I developed it spec-first with Kiro using EARS requirements, steering documents, automated hooks, Hypothesis property-based tests, a custom power, MCP configuration, and specialist review/scanning agents; its 16-test suite covers cost estimation, report ordering, scan-history properties, authentication, owner isolation, and the complete UI flow.
+I developed it spec-first with Kiro using EARS requirements, steering documents, automated hooks, Hypothesis property-based tests, a custom power, MCP configuration, and specialist review/scanning agents; the 65-test suite covers the real ZAP client, the SSRF guard, cost estimation, report ordering, owner isolation, and the complete UI flow — and the demo video shows a live ZAP scan finding real High-severity XSS and SQL injection.
 
 Repo: https://github.com/Alaqmar-morawala/securescan-kiro-university
-Demo video (2m15s): https://github.com/Alaqmar-morawala/securescan-kiro-university/releases/download/final-demo/securescan-demo-real.mp4
+Demo video (1m54s): https://github.com/Alaqmar-morawala/securescan-kiro-university/releases/download/final-demo/securescan-demo-real-engine.mp4
 
 #KiroUniversity #BuildWithKiro @kiro
 ```
@@ -66,4 +67,3 @@ Demo video (2m15s): https://github.com/Alaqmar-morawala/securescan-kiro-universi
 
 Do not use the alternate authenticated `saif-pvt` account: mismatched social and
 GitHub identities may be disqualified.
-

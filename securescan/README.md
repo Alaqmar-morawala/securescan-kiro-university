@@ -66,13 +66,18 @@ real daemon-backed scan of the bundled vulnerable target.
 **Expected total on free plan: 5,000 credits** (5,250 with paid cloud bonus).
 
 
-## Demo video script (60–90s)
-1. Landing → register/login (auth).
-2. Add `https://example.com` → configure (full, depth 3) → show cost/duration estimate.
-3. Start scan → progress JSON → DONE with severity-ordered findings.
+## Demo video (final-exam cut, 1m54s)
+Recorded against the real engine: `demo/v2/securescan-demo-real-engine.mp4` on the
+`final-demo` GitHub release — register → bundled vulnerable target → cost
+estimate → LIVE real ZAP scan (time-lapsed) → 37 real severity-ordered findings
+(High XSS + SQLi) → HTML/PDF/CSV reports → per-lesson `.kiro` tour → 65-test
+outro. Re-record with `demo/v2/record_real.sh` (prereqs in the file header).
+Manual walkthrough if you prefer narrating live:
+1. Landing → register/login (auth); engine chip shows LIVE ZAP.
+2. Add `http://127.0.0.1:8473/` (manage.py vuln_target) → configure (full, depth 2, 25 pages) → cost/duration estimate.
+3. Start scan → live progress polling → DONE with real findings.
 4. Open HTML report → Download PDF / CSV.
 5. History page. Then flash `.kiro/` tree: specs, steering, hooks, agents, settings/mcp.json + `powers/secscan-django/`.
-6. (Optional, if ZAP is running) same flow against `manage.py vuln_target` with real findings.
 
 ## University project mapping (Parul SE lab)
 Practical 1 (objectives/requirements) → `.kiro/specs/securescan/requirements.md`;

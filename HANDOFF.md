@@ -22,7 +22,7 @@
 |---|---|
 | Local repo root | `/home/alaqmar/pentest001/challenge` (git; app in `securescan/`) |
 | Public GitHub | `https://github.com/Alaqmar-morawala/securescan-kiro-university` (`main`) |
-| Demo video (real E2E, ~2m15s) | `https://github.com/Alaqmar-morawala/securescan-kiro-university/releases/download/final-demo/securescan-demo-real.mp4` (release `final-demo`; local `demo/v2/securescan-demo-real.mp4`) |
+| Demo video (real ZAP scan, 1m54s) | `https://github.com/Alaqmar-morawala/securescan-kiro-university/releases/download/final-demo/securescan-demo-real-engine.mp4` (release `final-demo`; local `demo/v2/securescan-demo-real-engine.mp4`; older mock-era asset `securescan-demo-real.mp4` kept on the same release; re-record via `demo/v2/record_real.sh`) |
 | Challenge page | `https://kiro.dev/2026/university/` |
 | Terms (binding) | `https://kiro.dev/2026/university/terms/` |
 | Entry form | Opens **Fri Sep 25** at challenge page, due **Mon Oct 5, 23:59 PT** |
